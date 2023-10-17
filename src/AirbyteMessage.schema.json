@@ -1,0 +1,757 @@
+{
+  "definitions" : {
+    "AdvancedAuth" : {
+      "properties" : {
+        "auth_flow_type" : {
+          "$ref" : "#/definitions/AuthFlowType"
+        },
+        "oauth_config_specification" : {
+          "$ref" : "#/definitions/OAuthConfigSpecification"
+        },
+        "predicate_key" : {
+          "description" : "Json Path to a field in the connectorSpecification that should exist for the advanced auth to be applicable.",
+          "items" : {
+            "type" : "string"
+          },
+          "title" : "Predicate Key",
+          "type" : "array"
+        },
+        "predicate_value" : {
+          "description" : "Value of the predicate_key fields for the advanced auth to be applicable.",
+          "title" : "Predicate Value",
+          "type" : "string"
+        }
+      },
+      "title" : "AdvancedAuth",
+      "type" : "object"
+    },
+    "AirbyteCatalog" : {
+      "properties" : {
+        "streams" : {
+          "items" : {
+            "$ref" : "#/definitions/AirbyteStream"
+          },
+          "title" : "Streams",
+          "type" : "array"
+        }
+      },
+      "required" : [
+        "streams"
+      ],
+      "title" : "AirbyteCatalog",
+      "type" : "object"
+    },
+    "AirbyteConnectionStatus" : {
+      "properties" : {
+        "message" : {
+          "title" : "Message",
+          "type" : "string"
+        },
+        "status" : {
+          "$ref" : "#/definitions/Status"
+        }
+      },
+      "required" : [
+        "status"
+      ],
+      "title" : "AirbyteConnectionStatus",
+      "type" : "object"
+    },
+    "AirbyteControlConnectorConfigMessage" : {
+      "properties" : {
+        "config" : {
+          "description" : "the config items from this connector's spec to update",
+          "title" : "Config",
+          "type" : "object"
+        }
+      },
+      "required" : [
+        "config"
+      ],
+      "title" : "AirbyteControlConnectorConfigMessage",
+      "type" : "object"
+    },
+    "AirbyteControlMessage" : {
+      "properties" : {
+        "connectorConfig" : {
+          "allOf" : [
+            {
+              "$ref" : "#/definitions/AirbyteControlConnectorConfigMessage"
+            }
+          ],
+          "description" : "connector config orchestrator message: the updated config for the platform to store for this connector",
+          "title" : "Connectorconfig"
+        },
+        "emitted_at" : {
+          "description" : "the time in ms that the message was emitted",
+          "title" : "Emitted At",
+          "type" : "number"
+        },
+        "type" : {
+          "allOf" : [
+            {
+              "$ref" : "#/definitions/OrchestratorType"
+            }
+          ],
+          "description" : "the type of orchestrator message",
+          "title" : "orchestrator type"
+        }
+      },
+      "required" : [
+        "type",
+        "emitted_at"
+      ],
+      "title" : "AirbyteControlMessage",
+      "type" : "object"
+    },
+    "AirbyteErrorTraceMessage" : {
+      "properties" : {
+        "failure_type" : {
+          "allOf" : [
+            {
+              "$ref" : "#/definitions/FailureType"
+            }
+          ],
+          "description" : "The type of error"
+        },
+        "internal_message" : {
+          "description" : "The internal error that caused the failure",
+          "title" : "Internal Message",
+          "type" : "string"
+        },
+        "message" : {
+          "description" : "A user-friendly message that indicates the cause of the error",
+          "title" : "Message",
+          "type" : "string"
+        },
+        "stack_trace" : {
+          "description" : "The full stack trace of the error",
+          "title" : "Stack Trace",
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "message"
+      ],
+      "title" : "AirbyteErrorTraceMessage",
+      "type" : "object"
+    },
+    "AirbyteEstimateTraceMessage" : {
+      "properties" : {
+        "byte_estimate" : {
+          "description" : "The estimated number of bytes to be emitted by this sync for this stream",
+          "title" : "Byte Estimate",
+          "type" : "integer"
+        },
+        "name" : {
+          "description" : "The name of the stream",
+          "title" : "Name",
+          "type" : "string"
+        },
+        "namespace" : {
+          "description" : "The namespace of the stream",
+          "title" : "Namespace",
+          "type" : "string"
+        },
+        "row_estimate" : {
+          "description" : "The estimated number of rows to be emitted by this sync for this stream",
+          "title" : "Row Estimate",
+          "type" : "integer"
+        },
+        "type" : {
+          "allOf" : [
+            {
+              "$ref" : "#/definitions/EstimateType"
+            }
+          ],
+          "description" : "Estimates are either per-stream (STREAM) or for the entire sync (SYNC). STREAM is preferred, and requires the source to count how many records are about to be emitted per-stream (e.g. there will be 100 rows from this table emitted). For the rare source which cannot tell which stream a record belongs to before reading (e.g. CDC databases), SYNC estimates can be emitted. Sources should not emit both STREAM and SOURCE estimates within a sync.\n",
+          "title" : "estimate type"
+        }
+      },
+      "required" : [
+        "name",
+        "type"
+      ],
+      "title" : "AirbyteEstimateTraceMessage",
+      "type" : "object"
+    },
+    "AirbyteGlobalState" : {
+      "properties" : {
+        "shared_state" : {
+          "$ref" : "#/definitions/AirbyteStateBlob"
+        },
+        "stream_states" : {
+          "items" : {
+            "$ref" : "#/definitions/AirbyteStreamState"
+          },
+          "title" : "Stream States",
+          "type" : "array"
+        }
+      },
+      "required" : [
+        "stream_states"
+      ],
+      "title" : "AirbyteGlobalState",
+      "type" : "object"
+    },
+    "AirbyteLogMessage" : {
+      "properties" : {
+        "level" : {
+          "allOf" : [
+            {
+              "$ref" : "#/definitions/Level"
+            }
+          ],
+          "description" : "log level"
+        },
+        "message" : {
+          "description" : "log message",
+          "title" : "Message",
+          "type" : "string"
+        },
+        "stack_trace" : {
+          "description" : "an optional stack trace if the log message corresponds to an exception",
+          "title" : "Stack Trace",
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "level",
+        "message"
+      ],
+      "title" : "AirbyteLogMessage",
+      "type" : "object"
+    },
+    "AirbyteRecordMessage" : {
+      "properties" : {
+        "data" : {
+          "description" : "record data",
+          "title" : "Data",
+          "type" : "object"
+        },
+        "emitted_at" : {
+          "description" : "when the data was emitted from the source. epoch in millisecond.",
+          "title" : "Emitted At",
+          "type" : "integer"
+        },
+        "namespace" : {
+          "description" : "namespace the data is associated with",
+          "title" : "Namespace",
+          "type" : "string"
+        },
+        "stream" : {
+          "description" : "stream the data is associated with",
+          "title" : "Stream",
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "stream",
+        "data",
+        "emitted_at"
+      ],
+      "title" : "AirbyteRecordMessage",
+      "type" : "object"
+    },
+    "AirbyteStateBlob" : {
+      "properties" : {},
+      "title" : "AirbyteStateBlob",
+      "type" : "object"
+    },
+    "AirbyteStateMessage" : {
+      "properties" : {
+        "data" : {
+          "description" : "(Deprecated) the state data",
+          "title" : "Data",
+          "type" : "object"
+        },
+        "global" : {
+          "$ref" : "#/definitions/AirbyteGlobalState"
+        },
+        "stream" : {
+          "$ref" : "#/definitions/AirbyteStreamState"
+        },
+        "type" : {
+          "$ref" : "#/definitions/AirbyteStateType"
+        }
+      },
+      "title" : "AirbyteStateMessage",
+      "type" : "object"
+    },
+    "AirbyteStateType" : {
+      "description" : "An enumeration.",
+      "enum" : [
+        "GLOBAL",
+        "STREAM",
+        "LEGACY"
+      ],
+      "title" : "AirbyteStateType"
+    },
+    "AirbyteStream" : {
+      "properties" : {
+        "default_cursor_field" : {
+          "description" : "Path to the field that will be used to determine if a record is new or modified since the last sync. If not provided by the source, the end user will have to specify the comparable themselves.",
+          "items" : {
+            "type" : "string"
+          },
+          "title" : "Default Cursor Field",
+          "type" : "array"
+        },
+        "json_schema" : {
+          "description" : "Stream schema using Json Schema specs.",
+          "title" : "Json Schema",
+          "type" : "object"
+        },
+        "name" : {
+          "description" : "Stream's name.",
+          "title" : "Name",
+          "type" : "string"
+        },
+        "namespace" : {
+          "description" : "Optional Source-defined namespace. Currently only used by JDBC destinations to determine what schema to write to. Airbyte streams from the same sources should have the same namespace.",
+          "title" : "Namespace",
+          "type" : "string"
+        },
+        "source_defined_cursor" : {
+          "description" : "If the source defines the cursor field, then any other cursor field inputs will be ignored. If it does not, either the user_provided one is used, or the default one is used as a backup.",
+          "title" : "Source Defined Cursor",
+          "type" : "boolean"
+        },
+        "source_defined_primary_key" : {
+          "description" : "If the source defines the primary key, paths to the fields that will be used as a primary key. If not provided by the source, the end user will have to specify the primary key themselves.",
+          "items" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "title" : "Source Defined Primary Key",
+          "type" : "array"
+        },
+        "supported_sync_modes" : {
+          "description" : "List of sync modes supported by this stream.",
+          "items" : {
+            "$ref" : "#/definitions/SyncMode"
+          },
+          "minItems" : 1,
+          "type" : "array"
+        }
+      },
+      "required" : [
+        "name",
+        "json_schema",
+        "supported_sync_modes"
+      ],
+      "title" : "AirbyteStream",
+      "type" : "object"
+    },
+    "AirbyteStreamState" : {
+      "properties" : {
+        "stream_descriptor" : {
+          "$ref" : "#/definitions/StreamDescriptor"
+        },
+        "stream_state" : {
+          "$ref" : "#/definitions/AirbyteStateBlob"
+        }
+      },
+      "required" : [
+        "stream_descriptor"
+      ],
+      "title" : "AirbyteStreamState",
+      "type" : "object"
+    },
+    "AirbyteTraceMessage" : {
+      "properties" : {
+        "emitted_at" : {
+          "description" : "the time in ms that the message was emitted",
+          "title" : "Emitted At",
+          "type" : "number"
+        },
+        "error" : {
+          "allOf" : [
+            {
+              "$ref" : "#/definitions/AirbyteErrorTraceMessage"
+            }
+          ],
+          "description" : "error trace message: the error object",
+          "title" : "Error"
+        },
+        "estimate" : {
+          "allOf" : [
+            {
+              "$ref" : "#/definitions/AirbyteEstimateTraceMessage"
+            }
+          ],
+          "description" : "Estimate trace message: a guess at how much data will be produced in this sync",
+          "title" : "Estimate"
+        },
+        "type" : {
+          "allOf" : [
+            {
+              "$ref" : "#/definitions/TraceType"
+            }
+          ],
+          "description" : "the type of trace message",
+          "title" : "trace type"
+        }
+      },
+      "required" : [
+        "type",
+        "emitted_at"
+      ],
+      "title" : "AirbyteTraceMessage",
+      "type" : "object"
+    },
+    "AuthFlowType" : {
+      "description" : "An enumeration.",
+      "enum" : [
+        "oauth2.0",
+        "oauth1.0"
+      ],
+      "title" : "AuthFlowType"
+    },
+    "AuthSpecification" : {
+      "properties" : {
+        "auth_type" : {
+          "$ref" : "#/definitions/AuthType"
+        },
+        "oauth2Specification" : {
+          "allOf" : [
+            {
+              "$ref" : "#/definitions/OAuth2Specification"
+            }
+          ],
+          "description" : "If the connector supports OAuth, this field should be non-null.",
+          "title" : "Oauth2Specification"
+        }
+      },
+      "title" : "AuthSpecification",
+      "type" : "object"
+    },
+    "AuthType" : {
+      "description" : "An enumeration.",
+      "enum" : [
+        "oauth2.0"
+      ],
+      "title" : "AuthType"
+    },
+    "ConnectorSpecification" : {
+      "properties" : {
+        "advanced_auth" : {
+          "allOf" : [
+            {
+              "$ref" : "#/definitions/AdvancedAuth"
+            }
+          ],
+          "description" : "Additional and optional specification object to describe what an 'advanced' Auth flow would need to function.\n  - A connector should be able to fully function with the configuration as described by the ConnectorSpecification in a 'basic' mode.\n  - The 'advanced' mode provides easier UX for the user with UI improvements and automations. However, this requires further setup on the\n  server side by instance or workspace admins beforehand. The trade-off is that the user does not have to provide as many technical\n  inputs anymore and the auth process is faster and easier to complete.",
+          "title" : "Advanced Auth"
+        },
+        "authSpecification" : {
+          "allOf" : [
+            {
+              "$ref" : "#/definitions/AuthSpecification"
+            }
+          ],
+          "description" : "deprecated, switching to advanced_auth instead",
+          "title" : "Authspecification"
+        },
+        "changelogUrl" : {
+          "format" : "uri",
+          "maxLength" : 65536,
+          "minLength" : 1,
+          "title" : "Changelogurl",
+          "type" : "string"
+        },
+        "connectionSpecification" : {
+          "description" : "ConnectorDefinition specific blob. Must be a valid JSON string.",
+          "title" : "Connectionspecification",
+          "type" : "object"
+        },
+        "documentationUrl" : {
+          "format" : "uri",
+          "maxLength" : 65536,
+          "minLength" : 1,
+          "title" : "Documentationurl",
+          "type" : "string"
+        },
+        "protocol_version" : {
+          "description" : "the Airbyte Protocol version supported by the connector. Protocol versioning uses SemVer. ",
+          "title" : "Protocol Version",
+          "type" : "string"
+        },
+        "supported_destination_sync_modes" : {
+          "description" : "List of destination sync modes supported by the connector",
+          "items" : {
+            "$ref" : "#/definitions/DestinationSyncMode"
+          },
+          "type" : "array"
+        },
+        "supportsDBT" : {
+          "default" : false,
+          "description" : "If the connector supports DBT or not.",
+          "title" : "Supportsdbt",
+          "type" : "boolean"
+        },
+        "supportsIncremental" : {
+          "description" : "(deprecated) If the connector supports incremental mode or not.",
+          "title" : "Supportsincremental",
+          "type" : "boolean"
+        },
+        "supportsNormalization" : {
+          "default" : false,
+          "description" : "If the connector supports normalization or not.",
+          "title" : "Supportsnormalization",
+          "type" : "boolean"
+        }
+      },
+      "required" : [
+        "connectionSpecification"
+      ],
+      "title" : "ConnectorSpecification",
+      "type" : "object"
+    },
+    "DestinationSyncMode" : {
+      "description" : "An enumeration.",
+      "enum" : [
+        "append",
+        "overwrite",
+        "append_dedup"
+      ],
+      "title" : "DestinationSyncMode"
+    },
+    "EstimateType" : {
+      "description" : "An enumeration.",
+      "enum" : [
+        "STREAM",
+        "SYNC"
+      ],
+      "title" : "EstimateType"
+    },
+    "FailureType" : {
+      "description" : "An enumeration.",
+      "enum" : [
+        "system_error",
+        "config_error"
+      ],
+      "title" : "FailureType"
+    },
+    "Level" : {
+      "description" : "An enumeration.",
+      "enum" : [
+        "FATAL",
+        "ERROR",
+        "WARN",
+        "INFO",
+        "DEBUG",
+        "TRACE"
+      ],
+      "title" : "Level"
+    },
+    "OAuth2Specification" : {
+      "properties" : {
+        "oauthFlowInitParameters" : {
+          "description" : "Pointers to the fields in the rootObject needed to obtain the initial refresh/access tokens for the OAuth flow. Each inner array represents the path in the rootObject of the referenced field. For example. Assume the rootObject contains params 'app_secret', 'app_id' which are needed to get the initial refresh token. If they are not nested in the rootObject, then the array would look like this [['app_secret'], ['app_id']] If they are nested inside an object called 'auth_params' then this array would be [['auth_params', 'app_secret'], ['auth_params', 'app_id']]",
+          "items" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "title" : "Oauthflowinitparameters",
+          "type" : "array"
+        },
+        "oauthFlowOutputParameters" : {
+          "description" : "Pointers to the fields in the rootObject which can be populated from successfully completing the oauth flow using the init parameters. This is typically a refresh/access token. Each inner array represents the path in the rootObject of the referenced field.",
+          "items" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "title" : "Oauthflowoutputparameters",
+          "type" : "array"
+        },
+        "rootObject" : {
+          "description" : "A list of strings representing a pointer to the root object which contains any oauth parameters in the ConnectorSpecification.\nExamples:\nif oauth parameters were contained inside the top level, rootObject=[] If they were nested inside another object {'credentials': {'app_id' etc...}, rootObject=['credentials'] If they were inside a oneOf {'switch': {oneOf: [{client_id...}, {non_oauth_param]}},  rootObject=['switch', 0] ",
+          "items" : {
+            "anyOf" : [
+              {
+                "type" : "string"
+              },
+              {
+                "type" : "integer"
+              }
+            ]
+          },
+          "title" : "Rootobject",
+          "type" : "array"
+        }
+      },
+      "title" : "OAuth2Specification",
+      "type" : "object"
+    },
+    "OAuthConfigSpecification" : {
+      "properties" : {
+        "complete_oauth_output_specification" : {
+          "description" : "OAuth specific blob. This is a Json Schema used to validate Json configurations produced by the OAuth flows as they are\nreturned by the distant OAuth APIs.\nMust be a valid JSON describing the fields to merge back to `ConnectorSpecification.connectionSpecification`.\nFor each field, a special annotation `path_in_connector_config` can be specified to determine where to merge it,\n\nExamples:\n\n    complete_oauth_output_specification={\n      refresh_token: {\n        type: string,\n        path_in_connector_config: ['credentials', 'refresh_token']\n      }\n    }",
+          "title" : "Complete Oauth Output Specification",
+          "type" : "object"
+        },
+        "complete_oauth_server_input_specification" : {
+          "description" : "OAuth specific blob. This is a Json Schema used to validate Json configurations persisted as Airbyte Server configurations.\nMust be a valid non-nested JSON describing additional fields configured by the Airbyte Instance or Workspace Admins to be used by the\nserver when completing an OAuth flow (typically exchanging an auth code for refresh token).\n\nExamples:\n\n    complete_oauth_server_input_specification={\n      client_id: {\n        type: string\n      },\n      client_secret: {\n        type: string\n      }\n    }",
+          "title" : "Complete Oauth Server Input Specification",
+          "type" : "object"
+        },
+        "complete_oauth_server_output_specification" : {
+          "description" : "OAuth specific blob. This is a Json Schema used to validate Json configurations persisted as Airbyte Server configurations that\nalso need to be merged back into the connector configuration at runtime.\nThis is a subset configuration of `complete_oauth_server_input_specification` that filters fields out to retain only the ones that\nare necessary for the connector to function with OAuth. (some fields could be used during oauth flows but not needed afterwards, therefore\nthey would be listed in the `complete_oauth_server_input_specification` but not `complete_oauth_server_output_specification`)\nMust be a valid non-nested JSON describing additional fields configured by the Airbyte Instance or Workspace Admins to be used by the\nconnector when using OAuth flow APIs.\nThese fields are to be merged back to `ConnectorSpecification.connectionSpecification`.\nFor each field, a special annotation `path_in_connector_config` can be specified to determine where to merge it,\n\nExamples:\n\n      complete_oauth_server_output_specification={\n        client_id: {\n          type: string,\n          path_in_connector_config: ['credentials', 'client_id']\n        },\n        client_secret: {\n          type: string,\n          path_in_connector_config: ['credentials', 'client_secret']\n        }\n      }",
+          "title" : "Complete Oauth Server Output Specification",
+          "type" : "object"
+        },
+        "oauth_user_input_from_connector_config_specification" : {
+          "description" : "OAuth specific blob. This is a Json Schema used to validate Json configurations used as input to OAuth.\nMust be a valid non-nested JSON that refers to properties from ConnectorSpecification.connectionSpecification\nusing special annotation 'path_in_connector_config'.\nThese are input values the user is entering through the UI to authenticate to the connector, that might also shared\nas inputs for syncing data via the connector.\n\nExamples:\n\nif no connector values is shared during oauth flow, oauth_user_input_from_connector_config_specification=[]\nif connector values such as 'app_id' inside the top level are used to generate the API url for the oauth flow,\n  oauth_user_input_from_connector_config_specification={\n    app_id: {\n      type: string\n      path_in_connector_config: ['app_id']\n    }\n  }\nif connector values such as 'info.app_id' nested inside another object are used to generate the API url for the oauth flow,\n  oauth_user_input_from_connector_config_specification={\n    app_id: {\n      type: string\n      path_in_connector_config: ['info', 'app_id']\n    }\n  }",
+          "title" : "Oauth User Input From Connector Config Specification",
+          "type" : "object"
+        }
+      },
+      "title" : "OAuthConfigSpecification",
+      "type" : "object"
+    },
+    "OrchestratorType" : {
+      "description" : "An enumeration.",
+      "enum" : [
+        "CONNECTOR_CONFIG"
+      ],
+      "title" : "OrchestratorType"
+    },
+    "Status" : {
+      "description" : "An enumeration.",
+      "enum" : [
+        "SUCCEEDED",
+        "FAILED"
+      ],
+      "title" : "Status"
+    },
+    "StreamDescriptor" : {
+      "properties" : {
+        "name" : {
+          "title" : "Name",
+          "type" : "string"
+        },
+        "namespace" : {
+          "title" : "Namespace",
+          "type" : "string"
+        }
+      },
+      "required" : [
+        "name"
+      ],
+      "title" : "StreamDescriptor",
+      "type" : "object"
+    },
+    "SyncMode" : {
+      "description" : "An enumeration.",
+      "enum" : [
+        "full_refresh",
+        "incremental"
+      ],
+      "title" : "SyncMode"
+    },
+    "TraceType" : {
+      "description" : "An enumeration.",
+      "enum" : [
+        "ERROR",
+        "ESTIMATE"
+      ],
+      "title" : "TraceType"
+    },
+    "Type" : {
+      "description" : "An enumeration.",
+      "enum" : [
+        "RECORD",
+        "STATE",
+        "LOG",
+        "SPEC",
+        "CONNECTION_STATUS",
+        "CATALOG",
+        "TRACE",
+        "CONTROL"
+      ],
+      "title" : "Type"
+    }
+  },
+  "properties" : {
+    "catalog" : {
+      "allOf" : [
+        {
+          "$ref" : "#/definitions/AirbyteCatalog"
+        }
+      ],
+      "description" : "catalog message: the catalog",
+      "title" : "Catalog"
+    },
+    "connectionStatus" : {
+      "$ref" : "#/definitions/AirbyteConnectionStatus"
+    },
+    "control" : {
+      "allOf" : [
+        {
+          "$ref" : "#/definitions/AirbyteControlMessage"
+        }
+      ],
+      "description" : "connector config message: a message to communicate an updated configuration from a connector that should be persisted",
+      "title" : "Control"
+    },
+    "log" : {
+      "allOf" : [
+        {
+          "$ref" : "#/definitions/AirbyteLogMessage"
+        }
+      ],
+      "description" : "log message: any kind of logging you want the platform to know about.",
+      "title" : "Log"
+    },
+    "record" : {
+      "allOf" : [
+        {
+          "$ref" : "#/definitions/AirbyteRecordMessage"
+        }
+      ],
+      "description" : "record message: the record",
+      "title" : "Record"
+    },
+    "spec" : {
+      "$ref" : "#/definitions/ConnectorSpecification"
+    },
+    "state" : {
+      "allOf" : [
+        {
+          "$ref" : "#/definitions/AirbyteStateMessage"
+        }
+      ],
+      "description" : "schema message: the state. Must be the last message produced. The platform uses this information",
+      "title" : "State"
+    },
+    "trace" : {
+      "allOf" : [
+        {
+          "$ref" : "#/definitions/AirbyteTraceMessage"
+        }
+      ],
+      "description" : "trace message: a message to communicate information about the status and performance of a connector",
+      "title" : "Trace"
+    },
+    "type" : {
+      "allOf" : [
+        {
+          "$ref" : "#/definitions/Type"
+        }
+      ],
+      "description" : "Message type"
+    }
+  },
+  "required" : [
+    "type"
+  ],
+  "title" : "AirbyteMessage",
+  "type" : "object"
+}

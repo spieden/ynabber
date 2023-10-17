@@ -1,0 +1,132 @@
+{
+  "definitions" : {
+    "AirbyteStream" : {
+      "properties" : {
+        "default_cursor_field" : {
+          "description" : "Path to the field that will be used to determine if a record is new or modified since the last sync. If not provided by the source, the end user will have to specify the comparable themselves.",
+          "items" : {
+            "type" : "string"
+          },
+          "title" : "Default Cursor Field",
+          "type" : "array"
+        },
+        "json_schema" : {
+          "description" : "Stream schema using Json Schema specs.",
+          "title" : "Json Schema",
+          "type" : "object"
+        },
+        "name" : {
+          "description" : "Stream's name.",
+          "title" : "Name",
+          "type" : "string"
+        },
+        "namespace" : {
+          "description" : "Optional Source-defined namespace. Currently only used by JDBC destinations to determine what schema to write to. Airbyte streams from the same sources should have the same namespace.",
+          "title" : "Namespace",
+          "type" : "string"
+        },
+        "source_defined_cursor" : {
+          "description" : "If the source defines the cursor field, then any other cursor field inputs will be ignored. If it does not, either the user_provided one is used, or the default one is used as a backup.",
+          "title" : "Source Defined Cursor",
+          "type" : "boolean"
+        },
+        "source_defined_primary_key" : {
+          "description" : "If the source defines the primary key, paths to the fields that will be used as a primary key. If not provided by the source, the end user will have to specify the primary key themselves.",
+          "items" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "title" : "Source Defined Primary Key",
+          "type" : "array"
+        },
+        "supported_sync_modes" : {
+          "description" : "List of sync modes supported by this stream.",
+          "items" : {
+            "$ref" : "#/definitions/SyncMode"
+          },
+          "minItems" : 1,
+          "type" : "array"
+        }
+      },
+      "required" : [
+        "name",
+        "json_schema",
+        "supported_sync_modes"
+      ],
+      "title" : "AirbyteStream",
+      "type" : "object"
+    },
+    "ConfiguredAirbyteStream" : {
+      "properties" : {
+        "cursor_field" : {
+          "description" : "Path to the field that will be used to determine if a record is new or modified since the last sync. This field is REQUIRED if `sync_mode` is `incremental`. Otherwise it is ignored.",
+          "items" : {
+            "type" : "string"
+          },
+          "title" : "Cursor Field",
+          "type" : "array"
+        },
+        "destination_sync_mode" : {
+          "$ref" : "#/definitions/DestinationSyncMode"
+        },
+        "primary_key" : {
+          "description" : "Paths to the fields that will be used as primary key. This field is REQUIRED if `destination_sync_mode` is `*_dedup`. Otherwise it is ignored.",
+          "items" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "title" : "Primary Key",
+          "type" : "array"
+        },
+        "stream" : {
+          "$ref" : "#/definitions/AirbyteStream"
+        },
+        "sync_mode" : {
+          "$ref" : "#/definitions/SyncMode"
+        }
+      },
+      "required" : [
+        "stream",
+        "sync_mode",
+        "destination_sync_mode"
+      ],
+      "title" : "ConfiguredAirbyteStream",
+      "type" : "object"
+    },
+    "DestinationSyncMode" : {
+      "description" : "An enumeration.",
+      "enum" : [
+        "append",
+        "overwrite",
+        "append_dedup"
+      ],
+      "title" : "DestinationSyncMode"
+    },
+    "SyncMode" : {
+      "description" : "An enumeration.",
+      "enum" : [
+        "full_refresh",
+        "incremental"
+      ],
+      "title" : "SyncMode"
+    }
+  },
+  "properties" : {
+    "streams" : {
+      "items" : {
+        "$ref" : "#/definitions/ConfiguredAirbyteStream"
+      },
+      "title" : "Streams",
+      "type" : "array"
+    }
+  },
+  "required" : [
+    "streams"
+  ],
+  "title" : "ConfiguredAirbyteCatalog",
+  "type" : "object"
+}
